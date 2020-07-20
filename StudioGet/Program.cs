@@ -1,14 +1,19 @@
 ﻿using System;
+#if CONSOLE
 using System.IO;
 using System.Reflection;
 using CommandLine;
 using Illusion;
 using Illusion.Card;
+#else
+using System.Windows.Forms;
+#endif
 
-namespace HS2StudioGet
+namespace StudioGet
 {
     class Program
     {
+#if CONSOLE
         public class Options
         {
             #region Properties
@@ -120,5 +125,17 @@ namespace HS2StudioGet
             Console.WriteLine("Press any key to close.");
             Console.ReadKey();
         }
+#else
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new MainFrm());
+        }
+#endif
     }
 }

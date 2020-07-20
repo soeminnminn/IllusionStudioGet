@@ -26,7 +26,7 @@ namespace Illusion.Card
 
         public string DataID { get; internal set; }
 
-        public byte[] PngData { get; internal set; }
+        public byte[] PngData { get; set; }
 
         public long DataSize { get; internal set; }
 
@@ -35,11 +35,24 @@ namespace Illusion.Card
         public Dictionary<string, byte[]> DataBlocks { get; internal set; }
 
         public CharaParameter Parameter { get; internal set; }
+
+        public string SourceFileName { get; }
+
+        public string Name 
+        {
+            get => Parameter.fullname;
+        }
+
+        public int Sex 
+        {
+            get => (int)Parameter.sex;
+        }
         #endregion
 
         #region Constructor
-        public AICharaCard()
+        public AICharaCard(string srcFileName)
         {
+            this.SourceFileName = srcFileName;
             this.DataBlocks = new Dictionary<string, byte[]>();
         }
         #endregion

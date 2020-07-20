@@ -15,6 +15,14 @@ namespace Illusion.Card
     public interface ICharaCard
     {
         #region Members
+        string Name { get; }
+
+        int Sex { get; }
+
+        byte[] PngData { get; set; }
+
+        string SourceFileName { get; }
+
         string GenerateFileName(CardTypes cardType);
 
         bool Save(Stream stream);

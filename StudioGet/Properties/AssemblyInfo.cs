@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("HS2StudioGet")]
+[assembly: AssemblyTitle("StudioGet")]
 [assembly: AssemblyDescription("Extract charater card from AI Shoujo / Honey Select 2 scene card.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("S16 Co. Ltd.")]
-[assembly: AssemblyProduct("HS2StudioGet")]
+[assembly: AssemblyProduct("StudioGet")]
 [assembly: AssemblyCopyright("Copyright © Soe Minn Minn, 2020")]
 [assembly: AssemblyTrademark("StudioGet")]
 [assembly: AssemblyCulture("")]

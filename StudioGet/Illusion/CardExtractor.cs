@@ -31,6 +31,7 @@ namespace Illusion.Card
         #region Methods
         public bool TryParse(FileInfo file)
         {
+            string fileName = file.FullName;
             using (BinaryReader reader = new BinaryReader(file.OpenRead()))
             {
                 var pngEnd = SearchForPngEnd(reader);
@@ -50,14 +51,14 @@ namespace Illusion.Card
                     else if (loadProductNo > 100) // Scene Card
                     {
                         reader.Seek(pngEnd, SeekOrigin.Begin);
-                        return ReadSceneCard(reader, pngEnd);
+                        return ReadSceneCard(fileName, reader, pngEnd);
                     }
 
                     var marker = reader.ReadString();
                     switch (marker)
                     {
                         case aiCharaMark:
-                            return ReadAiCharaCard(reader, pngEnd);
+                            return ReadAiCharaCard(fileName, reader, pngEnd);
 
                         case hsCharaMaleMark:
                         case hsCharaFemaleMark:
@@ -75,7 +76,7 @@ namespace Illusion.Card
             return false;
         }
 
-        private bool ReadSceneCard(BinaryReader reader, long pngEnd)
+        private bool ReadSceneCard(string fileName, BinaryReader reader, long pngEnd)
         {
             var version = reader.ReadString();
             Version loadVersion;
@@ -97,7 +98,7 @@ namespace Illusion.Card
                         switch (marker)
                         {
                             case aiCharaMark:
-                                ReadAiCharaCard(reader, 0);
+                                ReadAiCharaCard(fileName, reader, 0);
                                 break;
 
                             case hsCharaMaleMark:
@@ -122,9 +123,9 @@ namespace Illusion.Card
             return false;
         }
 
-        private bool ReadAiCharaCard(BinaryReader reader, long pngEnd)
+        private bool ReadAiCharaCard(string fileName, BinaryReader reader, long pngEnd)
         {
-            AICharaCard card = new AICharaCard();
+            AICharaCard card = new AICharaCard(fileName);
 
             try
             {
