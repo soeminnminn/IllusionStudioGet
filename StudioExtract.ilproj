@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Settings>
+  <!--Switches-->
+  <CopyAttributes Enabled="true" />
+  <UnionDuplicates Enabled="false" />
+  <Debug Enabled="1" />
+  <Internalize Enabled="false" />
+  <MergeXml Enabled="false" />
+  <!--Signing-->
+  <Sign Enabled="false" Delay="false"></Sign>
+  <!--Logging-->
+  <Log Enabled="false"></Log>
+  <!--Assemblies-->
+  <Assemblies>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\StudioExtract.exe</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\MessagePack.Annotations.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\MessagePack.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\Microsoft.Bcl.AsyncInterfaces.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\Microsoft.Win32.Primitives.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\netstandard.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.AppContext.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Buffers.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Collections.Concurrent.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Collections.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Collections.NonGeneric.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Collections.Specialized.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.ComponentModel.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.ComponentModel.EventBasedAsync.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.ComponentModel.Primitives.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.ComponentModel.TypeConverter.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Console.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Data.Common.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Diagnostics.Contracts.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Diagnostics.Debug.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Diagnostics.FileVersionInfo.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Diagnostics.Process.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Diagnostics.StackTrace.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Diagnostics.TextWriterTraceListener.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Diagnostics.Tools.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Diagnostics.TraceSource.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Diagnostics.Tracing.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Drawing.Primitives.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Dynamic.Runtime.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Globalization.Calendars.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Globalization.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Globalization.Extensions.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.IO.Compression.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.IO.Compression.ZipFile.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.IO.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.IO.FileSystem.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.IO.FileSystem.DriveInfo.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.IO.FileSystem.Primitives.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.IO.FileSystem.Watcher.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.IO.IsolatedStorage.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.IO.MemoryMappedFiles.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.IO.Pipes.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.IO.UnmanagedMemoryStream.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Linq.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Linq.Expressions.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Linq.Parallel.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Linq.Queryable.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Memory.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Net.Http.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Net.NameResolution.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Net.NetworkInformation.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Net.Ping.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Net.Primitives.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Net.Requests.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Net.Security.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Net.Sockets.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Net.WebHeaderCollection.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Net.WebSockets.Client.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Net.WebSockets.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Numerics.Vectors.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.ObjectModel.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Reflection.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Reflection.Extensions.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Reflection.Primitives.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Resources.Reader.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Resources.ResourceManager.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Resources.Writer.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Runtime.CompilerServices.Unsafe.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Runtime.CompilerServices.VisualC.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Runtime.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Runtime.Extensions.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Runtime.Handles.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Runtime.InteropServices.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Runtime.InteropServices.RuntimeInformation.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Runtime.Numerics.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Runtime.Serialization.Formatters.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Runtime.Serialization.Json.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Runtime.Serialization.Primitives.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Runtime.Serialization.Xml.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Security.Claims.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Security.Cryptography.Algorithms.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Security.Cryptography.Csp.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Security.Cryptography.Encoding.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Security.Cryptography.Primitives.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Security.Cryptography.X509Certificates.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Security.Principal.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Security.SecureString.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Text.Encoding.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Text.Encoding.Extensions.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Text.RegularExpressions.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Threading.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Threading.Overlapped.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Threading.Tasks.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Threading.Tasks.Extensions.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Threading.Tasks.Parallel.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Threading.Thread.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Threading.ThreadPool.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Threading.Timer.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.ValueTuple.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Xml.ReaderWriter.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Xml.XDocument.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Xml.XmlDocument.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Xml.XmlSerializer.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Xml.XPath.dll</Assembly>
+    <Assembly>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\System.Xml.XPath.XDocument.dll</Assembly>
+    <Primary>D:\Projects\IllusionHS2\StudioExtract\StudioExtract\bin\Release\StudioExtract.exe</Primary>
+  </Assemblies>
+  <!--Output-->
+  <OutputAssembly>D:\Projects\IllusionHS2\Release\StudioExtract.exe</OutputAssembly>
+  <!--.NET Framework-->
+  <Framework>.NET Framework 4.8 Full</Framework>
+  <!--Merge Engine-->
+  <Engine Name="ILMerge" />
+</Settings>

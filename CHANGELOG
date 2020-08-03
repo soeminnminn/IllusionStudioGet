@@ -1,3 +1,8 @@
-[1.0]
+[1.0.0.0]
+- Change StudioGet to Studio Extract.
+- Change console application to windows application.
+- Add Honey Select studio neo card extractor.
+
+[1.0.0.0-b]
 
 - Initial release
