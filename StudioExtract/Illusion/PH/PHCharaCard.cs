@@ -309,55 +309,56 @@ namespace Illusion.Card
         {
             BinaryList list = new BinaryList();
 
-            list.Add(reader.ReadInt32()); // headID
-            list.Add(reader.ReadInt32()); // faceTexID
-            list.Add(reader.ReadInt32()); // detailID
-            list.Add(reader.ReadSingle()); // detailWeight
-            list.Add(reader.ReadInt32()); // eyeBrowID
-            list.AddRange(ReadColorPBR1(reader, chara.version)); // eyeBrowColor
+            // headID, faceTexID, detailID, detailWeight, eyeBrowID
+            list.AddRange(reader.ReadBytes(20));
+
+            // eyeBrowColor
+            list.AddRange(ReadColorPBR1(reader, chara.version)); 
 
             if (chara.version < 4)
             {
-                byte[] eyeScleraColor = reader.ReadBytes(16); // eyeScleraColorL
+                // eyeScleraColor
+                byte[] eyeScleraColor = reader.ReadBytes(16); 
                 // eyeL
                 list.Add(reader.ReadInt32()); // eyeID_L
                 list.AddRange(eyeScleraColor); // eyeScleraColorL
                 list.AddRange(reader.ReadBytes(16)); // eyeIrisColorL
-                list.Add(0.0f); // eyePupilDilationL
-                list.Add(0.5f); // eyeEmissiveL
+                list.AddAll(0.0f, 0.5f); // eyePupilDilationL, eyeEmissiveL
 
                 // eyeR
                 list.Add(reader.ReadInt32()); // eyeID_R
                 list.AddRange(eyeScleraColor); // eyeScleraColorR
                 list.AddRange(reader.ReadBytes(16)); // eyeIrisColorR
-                list.Add(0.0f); // eyePupilDilationR
-                list.Add(0.5f); // eyeEmissiveR
+                list.AddAll(0.0f, 0.5f); // eyePupilDilationR, eyeEmissiveR
             }
             else
             {
-                // eyeL
-                list.Add(reader.ReadInt32()); // eyeID_L
-                list.AddRange(reader.ReadBytes(16)); // eyeScleraColorL
-                list.AddRange(reader.ReadBytes(16)); // eyeIrisColorL
-                list.Add(reader.ReadSingle()); // eyePupilDilationL
+                // eyeID_L, eyeScleraColorL, eyeIrisColorL eyePupilDilationL
+                list.AddRange(reader.ReadBytes(40));
                 if (chara.version >= 10)
+                {
                     list.Add(reader.ReadSingle()); // eyeEmissiveL
+                }
                 else
+                {
                     list.Add(0.5f); // eyeEmissiveL
+                }
 
-                // eyeR
-                list.Add(reader.ReadInt32()); // eyeID_R
-                list.AddRange(reader.ReadBytes(16)); // eyeScleraColorR
-                list.AddRange(reader.ReadBytes(16)); // eyeIrisColorR
-                list.Add(reader.ReadSingle()); // eyePupilDilationR
+                // eyeID_R, eyeScleraColorR, eyeIrisColorR, eyePupilDilationR
+                list.AddRange(reader.ReadBytes(40));
+
                 if (chara.version >= 10)
+                {
                     list.Add(reader.ReadSingle()); // eyeEmissiveR
+                }
                 else
+                {
                     list.Add(0.5f); // eyeEmissiveR
+                }
             }
 
-            list.Add(reader.ReadInt32()); // tattooID
-            list.AddRange(reader.ReadBytes(16)); // tattooColor
+            // tattooID, tattooColor
+            list.AddRange(reader.ReadBytes(20));
 
             // shapeVals
             int shapeCount = reader.ReadInt32();
@@ -370,17 +371,13 @@ namespace Illusion.Card
                 list.Add(reader.ReadInt32());
                 list.AddRange(ReadColorPBR1(reader, chara.version));
                 // eyeshadow
-                list.Add(reader.ReadInt32());
-                list.AddRange(reader.ReadBytes(16));
+                list.AddRange(reader.ReadBytes(20));
                 // cheek
-                list.Add(reader.ReadInt32());
-                list.AddRange(reader.ReadBytes(16));
+                list.AddRange(reader.ReadBytes(20));
                 // lip
-                list.Add(reader.ReadInt32());
-                list.AddRange(reader.ReadBytes(16));
+                list.AddRange(reader.ReadBytes(20));
                 // mole
-                list.Add(reader.ReadInt32());
-                list.AddRange(reader.ReadBytes(16));
+                list.AddRange(reader.ReadBytes(20));
 
                 // eyeHighlight
                 list.Add(reader.ReadInt32());
@@ -389,18 +386,20 @@ namespace Illusion.Card
             else
             {
                 // beard
-                list.Add(reader.ReadInt32());
-                list.AddRange(reader.ReadBytes(16));
+                list.AddRange(reader.ReadBytes(20));
+
                 if (chara.version >= 2)
-                    list.AddRange(ReadColorEyeHighlight(reader, chara.version)); // eyeHighlightColor
+                {
+                    // eyeHighlightColor
+                    list.AddRange(ReadColorEyeHighlight(reader, chara.version)); 
+                }
                 else
                 {
                     // eyeHighlightColor
                     list.Add(7); // colorType
                     list.AddAll(1f, 1f, 1f, 1f); // mainColor1
                     list.AddAll(1f, 1f, 1f, 1f); // specColor1
-                    list.Add(0f); // specular1
-                    list.Add(0f); // smooth1
+                    list.AddAll(0f, 0f); // specular1, smooth1
                 }
             }
 
@@ -411,33 +410,43 @@ namespace Illusion.Card
         {
             BinaryList list = new BinaryList();
 
-            list.Add(reader.ReadInt32()); // bodyID
-            list.AddRange(ReadColorAlloyHSVOffset(reader, chara.version)); // skinColor
-            list.Add(reader.ReadInt32()); // detailID
-            list.Add(reader.ReadSingle()); // detailWeight
-            list.Add(reader.ReadInt32()); // underhairID
-            list.AddRange(ReadColorAlloy(reader, chara.version)); // underhairColor
-            list.Add(reader.ReadInt32()); // tattooID
-            list.AddRange(reader.ReadBytes(16)); // tattooColor
+            // bodyID
+            list.Add(reader.ReadInt32());
+            // skinColor
+            list.AddRange(ReadColorAlloyHSVOffset(reader, chara.version)); 
+
+            // detailID, detailWeight, underhairID
+            list.AddRange(reader.ReadBytes(12));
+
+            // underhairColor
+            list.AddRange(ReadColorAlloy(reader, chara.version)); 
+
+            // tattooID, tattooColor
+            list.AddRange(reader.ReadBytes(20));
 
             // shapeVals
-            int shapeCount = reader.ReadInt32(); // 33
+            int shapeCount = reader.ReadInt32();
             list.Add(shapeCount);
             list.AddRange(reader.ReadBytes(shapeCount * 4));
 
             if (chara.sex == 0)
             {
-                list.Add(reader.ReadInt32()); // nipID
-                list.AddRange(ReadColorAlloyHSVOffset(reader, chara.version)); // nipColor
-                list.Add(reader.ReadInt32()); // sunburnID
-                list.AddRange(reader.ReadBytes(16)); // sunburnColor
+                // nipID
+                list.Add(reader.ReadInt32());
+                // nipColor
+                list.AddRange(ReadColorAlloyHSVOffset(reader, chara.version)); 
+                // sunburnID, sunburnColor
+                list.AddRange(reader.ReadBytes(20));
 
                 if (chara.version >= 3)
                 {
-                    list.AddRange(ReadColorAlloyHSVOffset(reader, chara.version)); // nailColor
+                    // nailColor
+                    list.AddRange(ReadColorAlloyHSVOffset(reader, chara.version)); 
+
                     if (chara.version >= 9)
                     {
-                        list.AddRange(ReadColorPBR1(reader, chara.version)); // manicureColor
+                        // manicureColor
+                        list.AddRange(ReadColorPBR1(reader, chara.version)); 
                     }
                     else
                     {
@@ -445,31 +454,27 @@ namespace Illusion.Card
                         list.Add(2); // colorType
                         list.AddAll(1f, 1f, 1f, 0f); // mainColor1
                         list.AddAll(1f, 1f, 1f, 1f); // specColor1
-                        list.Add(0f); // specular1
-                        list.Add(0f); // smooth1
+                        list.AddAll(0f, 0f); // specular1, smooth1
                     }
-                    list.Add(reader.ReadSingle()); // areolaSize
-                    list.Add(reader.ReadSingle()); // bustSoftness
-                    list.Add(reader.ReadSingle()); // bustWeight
+
+                    // areolaSize, bustSoftness, bustWeight
+                    list.AddRange(reader.ReadBytes(12));
                 }
                 else
                 {
                     // nailColor
                     list.Add(5); // colorType
                     list.AddAll(0f, 1f, 1f, 1f); // hsv offset + alpha
-                    list.Add(0f); // metallic
-                    list.Add(0.562f); // smooth
+                    list.AddAll(0f, 0.562f); // metallic, smooth
 
                     // manicureColor
                     list.Add(2); // colorType
                     list.AddAll(1f, 1f, 1f, 0f); // mainColor1
                     list.AddAll(1f, 1f, 1f, 1f); // specColor1
-                    list.Add(0f); // specular1
-                    list.Add(0f); // smooth1
+                    list.AddAll(0f, 0f); // specular1, smooth1
 
-                    list.Add(0.5f); // areolaSize
-                    list.Add(0.5f); // bustSoftness
-                    list.Add(0.5f); // bustWeight
+                    // areolaSize, bustSoftness, bustWeight
+                    list.AddAll(0.5f, 0.5f, 0.5f);
                 }
             }
 
@@ -483,9 +488,11 @@ namespace Illusion.Card
             for (int i = 0; i < 11; i++)
             {
                 BinaryList list = new BinaryList();
-                list.Add(reader.ReadInt32()); // WEAR_TYPE
-                list.Add(reader.ReadInt32());// id
-                list.AddRange(ReadColorPBR2(reader, chara.version)); // color
+                // WEAR_TYPE, id
+                list.AddRange(reader.ReadBytes(8));
+
+                // color
+                list.AddRange(ReadColorPBR2(reader, chara.version)); 
                 chara.wear[i] = list.ToArray();
             }
 
@@ -504,13 +511,8 @@ namespace Illusion.Card
             {
                 BinaryList list = new BinaryList();
 
-                list.Add(reader.ReadInt32()); // ACCESSORY_TYPE
-                list.Add(reader.ReadInt32()); // id
-                list.Add(reader.ReadInt32()); // nowAttach
-
-                list.AddRange(reader.ReadBytes(12)); // addPos
-                list.AddRange(reader.ReadBytes(12)); // addRot
-                list.AddRange(reader.ReadBytes(12)); // addScl
+                // ACCESSORY_TYPE, id, nowAttach, addPos, addRot addScl
+                list.AddRange(reader.ReadBytes(48));
 
                 list.AddRange(ReadColorPBR2(reader, chara.version)); // color
 
