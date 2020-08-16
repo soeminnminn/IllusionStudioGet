@@ -262,7 +262,7 @@ namespace Illusion.Card
                 ReadObjectInfo(reader, false);
             }
 
-            reader.ReadSingle();
+            reader.ReadSingle(); // animeNormalizedTime
             ReadChild(reader, version);
         }
 
