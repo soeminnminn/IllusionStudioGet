@@ -430,8 +430,9 @@ namespace StudioExtract
                     var emu = grp.GetEnumerator();
                     while (emu.MoveNext())
                     {
+                        int idx = listView.Items.Count + 1;
                         var c = emu.Current;
-                        var item = listView.Items.Add(new ListViewItem(listView.Items.Count.ToString(), group));
+                        var item = listView.Items.Add(new ListViewItem(idx.ToString(), group));
                         item.Tag = extractor.Cards.IndexOf(c);
                         item.SubItems.Add(c.Name);
                         item.SubItems.Add(c.Sex == 0 ? "Male" : "Female");
@@ -478,11 +479,21 @@ namespace StudioExtract
                         string fileName = card.GenerateFileName();
                         var charaFile = new FileInfo(Path.Combine(outDir.FullName, fileName));
 
+                        int attempt = 0;
                         while (charaFile.Exists)
                         {
-                            Thread.Sleep(100);
-                            fileName = card.GenerateFileName();
-                            charaFile = new FileInfo(Path.Combine(outDir.FullName, fileName));
+                            if (attempt > 0)
+                            {
+                                string newName = fileName.Replace(charaFile.Extension, $" ({attempt}){charaFile.Extension}");
+                                charaFile = new FileInfo(Path.Combine(outDir.FullName, newName));
+                            }
+                            else
+                            {
+                                Thread.Sleep(100);
+                                fileName = card.GenerateFileName();
+                                charaFile = new FileInfo(Path.Combine(outDir.FullName, fileName));
+                            }
+                            attempt++;
                         }
 
                         Image image = null;
@@ -547,9 +558,10 @@ namespace StudioExtract
             extractAllToolStripMenuItem.Enabled = enabled;
             extractSelectedToolStripMenuItem.Enabled = enabled && listView.CheckedItems.Count > 0;
         }
+
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openFileDialog.Filter = "AI/HS2 Scene File|*.png";
+            openFileDialog.Filter = "Illusion Scene File|*.png";
             if (openFileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 string[] fileList = openFileDialog.FileNames;

@@ -30,13 +30,6 @@ namespace Illusion.Card
             string fileName = file.FullName;
             using (BinaryReader reader = new BinaryReader(file.OpenRead()))
             {
-                //long pngSize = SearchForPngEnd(reader);
-
-                //if (pngSize == -1 || pngSize >= reader.BaseStream.Length)
-                //    return false;
-
-                //reader.Seek(pngSize, SeekOrigin.Begin);
-
                 long pngSize = 0L;
                 if (!CheckPngData(reader.BaseStream, ref pngSize, true))
                     return false;
@@ -49,9 +42,10 @@ namespace Illusion.Card
                     int loadProductNo = reader.ReadInt32();
                     if (loadProductNo != 100)
                     {
-                        if (CheckIfSceneCard(reader) != CardTypes.Unknown) // Scene Card
+                        CardTypes sceneCardType = CheckIfSceneCard(reader);
+                        if (sceneCardType != CardTypes.Unknown) // Scene Card
                         {
-                            return ReadSceneCard(fileName, reader, pngSize);
+                            return ReadSceneCard(fileName, sceneCardType, reader, pngSize);
                         }
 
                         reader.Seek(pngSize, SeekOrigin.Begin);
@@ -148,7 +142,7 @@ namespace Illusion.Card
             return CardTypes.Unknown;
         }
 
-        private bool ReadSceneCard(string fileName, BinaryReader reader, long pngEnd)
+        private bool ReadSceneCard(string fileName, CardTypes cardType, BinaryReader reader, long pngEnd)
         {
             var finderArr = new CardTypeFinder[]
                 {
@@ -160,7 +154,18 @@ namespace Illusion.Card
                     new CardTypeFinder(CardTypes.HoneySelectCharaFemale)
                 };
 
-            foreach(var finder in finderArr)
+            if (cardType == CardTypes.PHStudio)
+            {
+                PHSceneCard pHScene = new PHSceneCard(fileName);
+                pHScene.Parse(reader, pngEnd);
+                if (pHScene.CharaCards.Count > 0)
+                {
+                    this.Cards.AddRange(pHScene.CharaCards);
+                }
+                return true;
+            }
+
+            foreach (var finder in finderArr)
             {
                 reader.Seek(pngEnd, SeekOrigin.Begin);
                 if (finder.Find(reader, false))
@@ -214,18 +219,6 @@ namespace Illusion.Card
             }
 
             return true;
-        }
-
-        private long SearchForPngEnd(BinaryReader reader)
-        {
-            long result = reader.BaseStream.FindSequence(pngEndChunk);
-            if (result >= 0) result += pngEndChunk.Length;
-            return result;
-        }
-
-        private long SearchForPngStart(BinaryReader reader)
-        {
-            return reader.BaseStream.FindSequence(pngStartChunk);
         }
 
         private bool CheckPngData(Stream stream, ref long size, bool skip)
@@ -322,7 +315,7 @@ namespace Illusion.Card
             {
                 if (MarkerPattern == null) return false;
                 if (seekToBegin) reader.Seek(0, SeekOrigin.Begin);
-                Position = reader.BaseStream.FindPattern(MarkerPattern);
+                Position = reader.BaseStream.FindSequence(MarkerPattern);
                 return (Position > -1);
             }
             

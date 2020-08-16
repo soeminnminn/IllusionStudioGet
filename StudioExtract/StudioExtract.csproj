@@ -100,6 +100,7 @@
       <DependentUpon>AISCharaCard.cs</DependentUpon>
     </Compile>
     <Compile Include="Illusion\AIS\AISCharaCard.cs" />
+    <Compile Include="Illusion\BinaryList.cs" />
     <Compile Include="Illusion\Card.cs" />
     <Compile Include="Illusion\CardExtractor.cs" />
     <Compile Include="Illusion\AIS\AISCoordinateCard.cs" />
@@ -121,10 +122,8 @@
       <DependentUpon>KKCharaCard.cs</DependentUpon>
     </Compile>
     <Compile Include="Illusion\Options.cs" />
-    <Compile Include="Illusion\PH\PHCard.cs" />
     <Compile Include="Illusion\PH\PHCharaCard.cs" />
-    <Compile Include="Illusion\PH\PHColor.cs" />
-    <Compile Include="Illusion\PH\PHCoordinateCard.cs" />
+    <Compile Include="Illusion\PH\PHSceneCard.cs" />
     <Compile Include="Illusion\SB\SBPRCharaCard.cs" />
     <Compile Include="Illusion\SB\SBPRCharaCard.Types.cs">
       <DependentUpon>SBPRCharaCard.cs</DependentUpon>
