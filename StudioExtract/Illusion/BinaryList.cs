@@ -171,12 +171,20 @@ namespace Illusion.Card
             this.list.AddRange(encoding.GetBytes(item));
         }
 
-        public void Add(float r, float g, float b, float a)
+        public void AddAll(params int[] para)
         {
-            this.list.AddRange(BitConverter.GetBytes(r));
-            this.list.AddRange(BitConverter.GetBytes(g));
-            this.list.AddRange(BitConverter.GetBytes(b));
-            this.list.AddRange(BitConverter.GetBytes(a));
+            foreach (int v in para)
+            {
+                this.Add(v);
+            }
+        }
+
+        public void AddAll(params float[] para)
+        {
+            foreach (float v in para)
+            {
+                this.Add(v);
+            }
         }
 
         public void AddRange(IEnumerable<byte> collection)

@@ -24,57 +24,33 @@ namespace Illusion.Card
 
         #region Methods
 
-        private byte[] ReadColorHsv(BinaryReader reader)
-        {
-            BinaryList color = new BinaryList();
-            for (int i = 0; i < 9; i++)
-            {
-                color.Add(reader.ReadDouble());
-            }
-
-            return color.ToArray();
-        }
-
         #region Read OI Info
         private void ReadObjectInfo(BinaryReader reader, bool other)
         {
             // 133
-            reader.ReadInt32(); // dicKey
+            reader.ReadBytes(4); // dicKey
             reader.ReadString(); // ChangeAmount.pos
             reader.ReadString(); // ChangeAmount.rot
             reader.ReadString(); // ChangeAmount.scale
 
             if (other)
             {
-                reader.ReadInt32(); // treeState
-                reader.ReadBoolean(); // visible
+                // treeState, visible
+                reader.ReadBytes(5);
             }
         }
 
         private void ReadCharFileStatus(BinaryReader reader, int version, ref string name)
         {
-            reader.ReadInt32(); // coordinateType
+            reader.ReadBytes(4); // coordinateType
             int countAccessory = reader.ReadInt32();
             reader.ReadBytes(countAccessory);
-            reader.ReadInt32(); // eyesPtn
-            reader.ReadSingle(); // eyesOpen
-            reader.ReadSingle(); // eyesOpenMin
-            reader.ReadSingle(); // eyesOpenMax
-            reader.ReadSingle(); // eyesFixed
-            reader.ReadInt32(); // mouthPtn
-            reader.ReadSingle(); // mouthOpen
-            reader.ReadSingle(); // mouthOpenMin
-            reader.ReadSingle(); // mouthOpenMax
-            reader.ReadSingle(); // mouthFixed
-            reader.ReadByte(); // tongueState
-            reader.ReadInt32(); // eyesLookPtn
-            reader.ReadInt32(); // eyesTargetNo
-            reader.ReadSingle(); // eyesTargetRate
-            reader.ReadInt32(); // neckLookPtn
-            reader.ReadInt32(); // neckTargetNo
-            reader.ReadSingle(); // neckTargetRate
-            reader.ReadBoolean(); // eyesBlink
-            reader.ReadBoolean(); // disableShapeMouth
+
+            // eyesPtn, eyesOpen, eyesOpenMin, eyesOpenMax, eyesFixed
+            // mouthPtn, mouthOpen, mouthOpenMin, mouthOpenMax, mouthFixed
+            // tongueState, eyesLookPtn, eyesTargetNo, eyesTargetRate 
+            // neckLookPtn, neckTargetNo, neckTargetRate, eyesBlink, disableShapeMouth
+            reader.ReadBytes(67);
 
             int countClothesState = reader.ReadInt32();
             reader.ReadBytes(countClothesState);
@@ -82,15 +58,10 @@ namespace Illusion.Card
             int countSiruLv = reader.ReadInt32();
             reader.ReadBytes(countSiruLv);
 
-            reader.ReadSingle(); // nipStand
-            reader.ReadSingle(); // hohoAkaRate
-            reader.ReadSingle(); // tearsLv
-
-            reader.ReadBoolean(); // disableShapeBustL
-            reader.ReadBoolean(); // disableShapeBustR
-            reader.ReadBoolean(); // disableShapeNipL
-            reader.ReadBoolean(); // disableShapeNipR
-            reader.ReadBoolean(); // hideEyesHighlight
+            // nipStand, hohoAkaRate, tearsLv
+            // disableShapeBustL, disableShapeBustR, disableShapeNipL
+            // disableShapeNipR, hideEyesHighlight
+            reader.ReadBytes(17);
 
             if (version >= 14)
             {
@@ -146,80 +117,71 @@ namespace Illusion.Card
             int countBones = reader.ReadInt32();
             for (int i = 0; i < countBones; i++)
             {
-                reader.ReadInt32();
+                reader.ReadBytes(4);
                 ReadObjectInfo(reader, false);
             }
 
             int countIkTarget = reader.ReadInt32();
             for (int i = 0; i < countIkTarget; i++)
             {
-                reader.ReadInt32();
+                reader.ReadBytes(4);
                 ReadObjectInfo(reader, false);
             }
 
             int countChild = reader.ReadInt32();
             for (int i = 0; i < countChild; i++)
             {
-                reader.ReadInt32();
+                reader.ReadBytes(4);
                 ReadChild(reader, version);
             }
 
-            reader.ReadInt32(); // kinematicMode
-            reader.ReadInt32(); // animeInfo.group
-            reader.ReadInt32(); // animeInfo.category
-            reader.ReadInt32(); // animeInfo.no
-
-            reader.ReadInt32(); // handPtnL
-            reader.ReadInt32(); // handPtnR
-
-            reader.ReadSingle(); // skinRate
-            reader.ReadSingle(); // nipple
-            reader.ReadBytes(5); // siru
+            // kinematicMode, animeInfo.group, animeInfo.category, animeInfo.no
+            // handPtnL, handPtnR, skinRate nipple, siru
+            reader.ReadBytes(37);
 
             if (version >= 12)
-                reader.ReadInt32(); // faceOption
+            {
+                // faceOption
+                reader.ReadBytes(4); 
+            }
 
-            reader.ReadSingle(); // mouthOpen
-            reader.ReadBoolean(); // lipSync
+            // mouthOpen, lipSync
+            reader.ReadBytes(5);
 
             ReadObjectInfo(reader, false); // lookAtTarget
 
-            reader.ReadBoolean(); // enableIK
-            reader.ReadBytes(5); // activeIK
+            // enableIK, activeIK, enableFK, activeFK
+            // expression, animeSpeed
+            reader.ReadBytes(22);
 
-            reader.ReadBoolean(); // enableFK
-            reader.ReadBytes(7); // activeFK
-
-            reader.ReadBytes(4); // expression
-            reader.ReadSingle(); // animeSpeed
-
-            if (version < 12)
-                reader.ReadSingle(); // animePattern[0]
+            if (version < 12) 
+            {
+                // animePattern[0]
+                reader.ReadBytes(4);
+            }
             else
             {
-                reader.ReadSingle(); // animePattern[0]
-                reader.ReadSingle(); // animePattern[1]
+                // animePattern[0], animePattern[1]
+                reader.ReadBytes(8);
             }
 
-            reader.ReadBoolean(); // animeOptionVisible
-            reader.ReadBoolean(); // isAnimeForceLoop
+            // animeOptionVisible, isAnimeForceLoop
+            reader.ReadBytes(2);
 
             int voiceCount = reader.ReadInt32();
             for (int i = 0; i < voiceCount; i++)
             {
-                reader.ReadInt32(); // group
-                reader.ReadInt32(); // category
-                reader.ReadInt32(); // no
+                // group, category, no
+                reader.ReadBytes(12);
             }
-            reader.ReadInt32(); // repeat
+            reader.ReadBytes(4); // repeat
 
             if (sex == 0)
             {
                 reader.ReadBoolean(); // visibleSimple
                 reader.ReadString(); // simpleColor
-                reader.ReadBoolean(); // visibleSon
-                reader.ReadSingle(); // animeOptionParam[0]
-                reader.ReadSingle(); // animeOptionParam[1]
+                // visibleSon, animeOptionParam[0], animeOptionParam[1]
+                reader.ReadBytes(9);
             }
 
             int countNeckByte = reader.ReadInt32();
@@ -228,32 +190,28 @@ namespace Illusion.Card
             int countEyesByte = reader.ReadInt32();
             reader.ReadBytes(countEyesByte);
 
-            reader.ReadSingle(); // animeNormalizedTime
-            
+            reader.ReadBytes(4); // animeNormalizedTime
+
             int countAccessGroup = reader.ReadInt32();
             for (int i = 0; i < countAccessGroup; i++)
             {
-                reader.ReadInt32(); // key
-                reader.ReadInt32(); // TreeState
+                // key, TreeState
+                reader.ReadBytes(8);
             }
 
             int countAccessNo = reader.ReadInt32();
             for (int i = 0; i < countAccessNo; i++)
             {
-                reader.ReadInt32(); // key
-                reader.ReadInt32(); // TreeState
+                // key, TreeState
+                reader.ReadBytes(8);
             }
         }
 
         private void ReadOIItemInfo(BinaryReader reader, int version)
         {
             ReadObjectInfo(reader, true);
-            reader.ReadInt32(); // no
-            reader.ReadSingle(); // animeSpeed
-            reader.ReadInt32(); // colortype
-            ReadColorHsv(reader); // color
-            ReadColorHsv(reader); // color2
-            reader.ReadBoolean(); // enableFK
+            // no, animeSpeed, colortype, color, color2, enableFK
+            reader.ReadBytes(157);  
 
             int cbone = reader.ReadInt32();
             for (int i = 0; i < cbone; i++)
@@ -262,26 +220,21 @@ namespace Illusion.Card
                 ReadObjectInfo(reader, false);
             }
 
-            reader.ReadSingle(); // animeNormalizedTime
+            reader.ReadBytes(4); // animeNormalizedTime
             ReadChild(reader, version);
         }
 
         private void ReadOILightInfo(BinaryReader reader)
         {
             ReadObjectInfo(reader, true);
-            reader.ReadInt32(); // no
-            reader.ReadBytes(16); // color
-            reader.ReadSingle(); // intensity
-            reader.ReadSingle(); // range
-            reader.ReadSingle(); // spotAngle
-            reader.ReadBoolean(); // shadow
-            reader.ReadBoolean(); // enable
-            reader.ReadBoolean(); // drawTarget
+            // no, color, intensity, range, spotAngle, shadow, enable, drawTarget
+            reader.ReadBytes(35);
         }
 
         private void ReadOIFolderInfo(BinaryReader reader, int version)
         {
             ReadObjectInfo(reader, true);
+            // name
             reader.ReadString();
             ReadChild(reader, version);
         }

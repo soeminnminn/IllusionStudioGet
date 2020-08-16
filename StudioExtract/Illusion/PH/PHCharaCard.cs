@@ -46,6 +46,30 @@ namespace Illusion.Card
         #region Methods
 
         #region Color Reader
+        internal static byte[] ReadColorHair(BinaryReader reader, int version)
+        {
+            BinaryList color = new BinaryList();
+            color.Add(1); // colorType
+
+            if (version < 4)
+            {
+                color.AddRange(reader.ReadBytes(16)); // mainColor
+                color.AddAll(0.75f, 0.75f, 0.75f, 1.0f); // cuticleColor
+                color.Add(6f); // cuticleExp
+                color.AddAll(0.75f, 0.75f, 0.75f, 1.0f); // fresnelColor
+                color.Add(0.3f); // fresnelExp
+            }
+            else
+            {
+                reader.ReadInt32(); // colorType >> 1
+
+                // mainColor, cuticleColor, cuticleExp, fresnelColor, fresnelExp
+                color.AddRange(reader.ReadBytes(56)); 
+            }
+
+            return color.ToArray();
+        }
+
         internal static byte[] ReadColorPBR1(BinaryReader reader, int version)
         {
             BinaryList color = new BinaryList();
@@ -54,7 +78,7 @@ namespace Illusion.Card
             if (version < 4)
             {
                 color.AddRange(reader.ReadBytes(16)); // mainColor1
-                color.Add(1f, 1f, 1f, 1f); // specColor1
+                color.AddAll(1f, 1f, 1f, 1f); // specColor1
                 color.Add(0f); // specular1
                 color.Add(0f); // smooth1
             }
@@ -63,15 +87,13 @@ namespace Illusion.Card
                 int colorType = reader.ReadInt32(); // colorType
                 if (colorType != 0)
                 {
-                    color.AddRange(reader.ReadBytes(16)); // mainColor1
-                    color.AddRange(reader.ReadBytes(16)); // specColor1
-                    color.Add(reader.ReadSingle()); // specular1
-                    color.Add(reader.ReadSingle()); // smooth1
+                    // mainColor1, specColor1, specular1, smooth1
+                    color.AddRange(reader.ReadBytes(40));
                 }
                 else
                 {
-                    color.Add(1f, 1f, 1f, 1f); // mainColor1
-                    color.Add(1f, 1f, 1f, 1f); // specColor1
+                    color.AddAll(1f, 1f, 1f, 1f); // mainColor1
+                    color.AddAll(1f, 1f, 1f, 1f); // specColor1
                     color.Add(0f); // specular1
                     color.Add(0f); // smooth1
                 }
@@ -89,12 +111,12 @@ namespace Illusion.Card
             {
                 color.AddRange(reader.ReadBytes(16)); // mainColor1
 
-                color.Add(1f, 1f, 1f, 1f); // specColor1
+                color.AddAll(1f, 1f, 1f, 1f); // specColor1
                 color.Add(0f); // specular1
                 color.Add(0f); // smooth1
 
-                color.Add(1f, 1f, 1f, 1f); // mainColor2
-                color.Add(1f, 1f, 1f, 1f); // specColor2
+                color.AddAll(1f, 1f, 1f, 1f); // mainColor2
+                color.AddAll(1f, 1f, 1f, 1f); // specColor2
                 color.Add(0f); // specular2
                 color.Add(0f); // smooth2
             }
@@ -103,86 +125,28 @@ namespace Illusion.Card
                 int colorType = reader.ReadInt32(); // colorType
                 if (colorType != 0)
                 {
-                    color.AddRange(reader.ReadBytes(16)); // mainColor1
-                    color.AddRange(reader.ReadBytes(16)); // specColor1
-                    color.Add(reader.ReadSingle()); // specular1
-                    color.Add(reader.ReadSingle()); // smooth1
-                    color.AddRange(reader.ReadBytes(16)); // mainColor2
-                    color.AddRange(reader.ReadBytes(16)); // specColor2
+                    // mainColor1, specColor1, specular1
+                    // smooth1, mainColor2, specColor2
+                    color.AddRange(reader.ReadBytes(72));
+
                     if (version >= 5)
                         color.Add(reader.ReadSingle()); // specular2
                     else
                         color.Add(0f); // specular2
+
                     color.Add(reader.ReadSingle()); // smooth2
                 }
                 else
                 {
-                    color.Add(1f, 1f, 1f, 1f); // mainColor1
-                    color.Add(1f, 1f, 1f, 1f); // specColor1
+                    color.AddAll(1f, 1f, 1f, 1f); // mainColor1
+                    color.AddAll(1f, 1f, 1f, 1f); // specColor1
                     color.Add(0f); // specular1
                     color.Add(0f); // smooth1
 
-                    color.Add(1f, 1f, 1f, 1f); // mainColor2
-                    color.Add(1f, 1f, 1f, 1f); // specColor2
+                    color.AddAll(1f, 1f, 1f, 1f); // mainColor2
+                    color.AddAll(1f, 1f, 1f, 1f); // specColor2
                     color.Add(0f); // specular2
                     color.Add(0f); // smooth2
-                }
-            }
-
-            return color.ToArray();
-        }
-
-        internal static byte[] ReadColorAlloyHSVOffset(BinaryReader reader, int version)
-        {
-            BinaryList color = new BinaryList();
-            color.Add(5); // colorType
-
-            if (version < 4)
-            {
-                reader.ReadBytes(16);
-
-                color.Add(0f, 1f, 1f, 1f); // hsv offset + alpha
-                color.Add(0f); // metallic
-                color.Add(0.562f); // smooth
-            }
-            else
-            {
-                int colorType = reader.ReadInt32(); // colorType
-                if (colorType != 0)
-                {
-                    if (version < 6)
-                    {
-                        reader.ReadBytes(16);
-                        color.Add(0f, 1f, 1f, 1f); // hsv offset + alpha
-                    }
-                    else
-                    {
-                        color.Add(reader.ReadSingle()); // offset_h
-                        color.Add(reader.ReadSingle()); // offset_s
-                        color.Add(reader.ReadSingle()); // offset_v
-                        if (version == 7)
-                        {
-                            reader.ReadBoolean();
-                            color.Add(reader.ReadSingle()); // alpha
-                        }
-                        else if (version >= 8)
-                        {
-                            color.Add(reader.ReadSingle()); // alpha
-                        }
-                        else
-                        {
-                            color.Add(1f); // alpha
-                        }
-                    }
-
-                    color.Add(reader.ReadSingle()); // metallic
-                    color.Add(reader.ReadSingle()); // smooth
-                }
-                else
-                {
-                    color.Add(0f, 1f, 1f, 1f); // hsv offset + alpha
-                    color.Add(0f); // metallic
-                    color.Add(0.562f); // smooth
                 }
             }
 
@@ -206,13 +170,12 @@ namespace Illusion.Card
                 int colorType = reader.ReadInt32(); // colorType
                 if (colorType != 0)
                 {
-                    color.AddRange(reader.ReadBytes(16)); // mainColor
-                    color.Add(reader.ReadSingle()); // metallic
-                    color.Add(reader.ReadSingle()); // smooth
+                    // mainColor, metallic, smooth
+                    color.AddRange(reader.ReadBytes(24));
                 }
                 else
                 {
-                    color.Add(1f, 1f, 1f, 1f); // mainColor
+                    color.AddAll(1f, 1f, 1f, 1f); // mainColor
                     color.Add(0f); // metallic
                     color.Add(0f); // smooth
                 }
@@ -221,28 +184,58 @@ namespace Illusion.Card
             return color.ToArray();
         }
 
-        internal static byte[] ReadColorHair(BinaryReader reader, int version)
+        internal static byte[] ReadColorAlloyHSVOffset(BinaryReader reader, int version)
         {
             BinaryList color = new BinaryList();
-            color.Add(1); // colorType
+            color.Add(5); // colorType
 
             if (version < 4)
             {
-                color.AddRange(reader.ReadBytes(16)); // mainColor
-                color.Add(0.75f, 0.75f, 0.75f, 1.0f); // cuticleColor
-                color.Add(6f); // cuticleExp
-                color.Add(0.75f, 0.75f, 0.75f, 1.0f); // fresnelColor
-                color.Add(0.3f); // fresnelExp
+                reader.ReadBytes(16);
+
+                color.AddAll(0f, 1f, 1f, 1f); // hsv offset + alpha
+                color.Add(0f); // metallic
+                color.Add(0.562f); // smooth
             }
             else
             {
-                reader.ReadInt32(); // colorType >> 1
+                int colorType = reader.ReadInt32(); // colorType
+                if (colorType != 0)
+                {
+                    if (version < 6)
+                    {
+                        reader.ReadBytes(16);
+                        color.AddAll(0f, 1f, 1f, 1f); // hsv offset + alpha
+                    }
+                    else
+                    {
+                        // offset_h, offset_s, offset_v
+                        color.AddRange(reader.ReadBytes(12));
 
-                color.AddRange(reader.ReadBytes(16)); // mainColor
-                color.AddRange(reader.ReadBytes(16)); // cuticleColor
-                color.Add(reader.ReadSingle()); // cuticleExp
-                color.AddRange(reader.ReadBytes(16)); // fresnelColor
-                color.Add(reader.ReadSingle()); // fresnelExp
+                        if (version == 7)
+                        {
+                            reader.ReadBoolean();
+                            color.Add(reader.ReadSingle()); // alpha
+                        }
+                        else if (version >= 8)
+                        {
+                            color.Add(reader.ReadSingle()); // alpha
+                        }
+                        else
+                        {
+                            color.Add(1f); // alpha
+                        }
+                    }
+
+                    // metallic, smooth
+                    color.AddRange(reader.ReadBytes(8));
+                }
+                else
+                {
+                    color.AddAll(0f, 1f, 1f, 1f); // hsv offset + alpha
+                    color.Add(0f); // metallic
+                    color.Add(0.562f); // smooth
+                }
             }
 
             return color.ToArray();
@@ -257,7 +250,7 @@ namespace Illusion.Card
             {
                 color.AddRange(reader.ReadBytes(16)); // mainColor1
 
-                color.Add(1f, 1f, 1f, 1f); // specColor1
+                color.AddAll(1f, 1f, 1f, 1f); // specColor1
                 color.Add(0f); // specular1
                 color.Add(0f); // smooth1
             }
@@ -266,15 +259,13 @@ namespace Illusion.Card
                 int colorType = reader.ReadInt32(); // colorType
                 if (colorType != 0)
                 {
-                    color.AddRange(reader.ReadBytes(16)); // mainColor1
-                    color.AddRange(reader.ReadBytes(16)); // specColor1
-                    color.Add(reader.ReadSingle()); // specular1
-                    color.Add(reader.ReadSingle()); // smooth1
+                    // mainColor1, specColor1, specular1, smooth1
+                    color.AddRange(reader.ReadBytes(40));
                 }
                 else
                 {
-                    color.Add(1f, 1f, 1f, 1f); // mainColor1
-                    color.Add(1f, 1f, 1f, 1f); // specColor1
+                    color.AddAll(1f, 1f, 1f, 1f); // mainColor1
+                    color.AddAll(1f, 1f, 1f, 1f); // specColor1
                     color.Add(0f); // specular1
                     color.Add(0f); // smooth1
                 }
@@ -406,8 +397,8 @@ namespace Illusion.Card
                 {
                     // eyeHighlightColor
                     list.Add(7); // colorType
-                    list.Add(1f, 1f, 1f, 1f); // mainColor1
-                    list.Add(1f, 1f, 1f, 1f); // specColor1
+                    list.AddAll(1f, 1f, 1f, 1f); // mainColor1
+                    list.AddAll(1f, 1f, 1f, 1f); // specColor1
                     list.Add(0f); // specular1
                     list.Add(0f); // smooth1
                 }
@@ -452,8 +443,8 @@ namespace Illusion.Card
                     {
                         // manicureColor
                         list.Add(2); // colorType
-                        list.Add(1f, 1f, 1f, 0f); // mainColor1
-                        list.Add(1f, 1f, 1f, 1f); // specColor1
+                        list.AddAll(1f, 1f, 1f, 0f); // mainColor1
+                        list.AddAll(1f, 1f, 1f, 1f); // specColor1
                         list.Add(0f); // specular1
                         list.Add(0f); // smooth1
                     }
@@ -465,14 +456,14 @@ namespace Illusion.Card
                 {
                     // nailColor
                     list.Add(5); // colorType
-                    list.Add(0f, 1f, 1f, 1f); // hsv offset + alpha
+                    list.AddAll(0f, 1f, 1f, 1f); // hsv offset + alpha
                     list.Add(0f); // metallic
                     list.Add(0.562f); // smooth
 
                     // manicureColor
                     list.Add(2); // colorType
-                    list.Add(1f, 1f, 1f, 0f); // mainColor1
-                    list.Add(1f, 1f, 1f, 1f); // specColor1
+                    list.AddAll(1f, 1f, 1f, 0f); // mainColor1
+                    list.AddAll(1f, 1f, 1f, 1f); // specColor1
                     list.Add(0f); // specular1
                     list.Add(0f); // smooth1
 
