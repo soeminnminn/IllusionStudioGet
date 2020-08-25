@@ -113,10 +113,12 @@
     <Compile Include="Illusion\HS\HSCharaCard.cs" />
     <Compile Include="Illusion\Attributes.cs" />
     <Compile Include="Illusion\HS\HSColorSet.cs" />
+    <Compile Include="Illusion\HS\HSCoordinateCard.cs" />
     <Compile Include="Illusion\HS\HSCoordinateCard.Types.cs">
       <DependentUpon>HSCoordinateCard.cs</DependentUpon>
     </Compile>
-    <Compile Include="Illusion\HS\HSCoordinateCard.cs" />
+    <Compile Include="Illusion\HS\HSSceneCard.cs" />
+    <Compile Include="Illusion\HS\NeoSceneCard.cs" />
     <Compile Include="Illusion\KK\KKCharaCard.cs" />
     <Compile Include="Illusion\KK\KKCharaCard.Types.cs">
       <DependentUpon>KKCharaCard.cs</DependentUpon>
