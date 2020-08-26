@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Illusion.Card
 {
-    public class HSSceneCard : ISceneCard
+    public class NeoV2SceneCard : ISceneCard
     {
         #region Variables
         public byte[] PngData { get; set; }
@@ -17,7 +17,7 @@ namespace Illusion.Card
         #endregion
 
         #region Constructor
-        public HSSceneCard(string srcFileName)
+        public NeoV2SceneCard(string srcFileName)
         {
             this.SourceFileName = srcFileName;
             this.CharaCards = new List<ICharaCard>();
@@ -25,6 +25,7 @@ namespace Illusion.Card
         #endregion
 
         #region Methods
+
         private Version VersionOf(int major, int minor, int build, int revision) => new Version(major, minor, build, revision);
 
         private Version VersionOf(int major, int minor, int build) => new Version(major, minor, build);
@@ -37,17 +38,10 @@ namespace Illusion.Card
 
             if (other)
             {
-                if (version >= VersionOf(1, 0, 1))
-                {
-                    // treeState
-                    reader.ReadBytes(4);
-                }
-                
-                if (version >= VersionOf(1, 0, 2))
-                {
-                    // visible
-                    reader.ReadBoolean();
-                }
+                // treeState
+                reader.ReadBytes(4);
+                // visible
+                reader.ReadBoolean();
             }
         }
 
@@ -71,22 +65,41 @@ namespace Illusion.Card
                     case 3:
                         ReadOIFolderInfo(reader, version);
                         break;
+                    case 4:
+                        ReadOIRouteInfo(reader, version);
+                        break;
+                    case 5:
+                        ReadOICameraInfo(reader, version);
+                        break;
                     default:
                         break;
                 }
             }
         }
 
+        protected virtual void ReadOIPatternInfo(BinaryReader reader, Version version)
+        {
+            reader.ReadString(); // color
+            reader.ReadBytes(4); // key
+            reader.ReadString(); // filePath
+            reader.ReadByte(); // clamp
+            reader.ReadString(); // uv
+            reader.ReadBytes(4); // rot
+        }
+
         protected virtual void ReadOICharInfo(BinaryReader reader, Version version)
         {
             ReadObjectInfo(reader, version, true);
+            reader.ReadBytes(4); // sex
 
-            var sex = reader.ReadInt32();
-            var mark = reader.ReadString();
-
-            HSCharaCard charaCard = new HSCharaCard(this.SourceFileName, mark, (short)sex);
-            charaCard.Parse(reader, 0L);
-            this.CharaCards.Add(charaCard);
+            int productNo = reader.ReadInt32();
+            if (productNo <= 100)
+            {
+                var mark = reader.ReadString();
+                AISCharaCard charaCard = new AISCharaCard(this.SourceFileName, productNo, mark);
+                charaCard.Parse(reader, 0L);
+                this.CharaCards.Add(charaCard);
+            }
 
             // bones
             int countBones = reader.ReadInt32();
@@ -112,40 +125,17 @@ namespace Illusion.Card
             }
 
             // kinematicMode, animeInfo.group, animeInfo.category, animeInfo.no
-            // handPtnL, handPtnR, skinRate, nipple
-            reader.ReadBytes(32);
-
-            if (version >= VersionOf(0, 1, 3))
-            {
-                reader.ReadBytes(5); // siru
-            }
-
-            if (version >= VersionOf(0, 1, 1))
-            {
-                reader.ReadBytes(4); // mouthOpen
-            }
-
-            // lipSync
-            reader.ReadByte();
+            // handPtnL, handPtnR, nipple, siru, mouthOpen, lipSync
+            reader.ReadBytes(38);
 
             // lookAtTarget
             ReadObjectInfo(reader, version, false);
 
-            // enableIK, activeIK, enableFK, activeFK, expression // 18
-            // animeSpeed, animePattern
-            reader.ReadBytes(26);
+            // enableIK, activeIK, enableFK, activeFK, expression
+            // animeSpeed, animePattern, animeOptionVisible, isAnimeForceLoop
+            reader.ReadBytes(32);
 
-            if (version >= VersionOf(0, 1, 1))
-            {
-                reader.ReadByte(); // animeOptionVisible
-            }
-
-            if (version >= VersionOf(0, 1, 5))
-            {
-                reader.ReadByte(); // isAnimeForceLoop
-            }
-
-            // VoiceCtrl
+            // voiceCtrl
             int cVoice = reader.ReadInt32();
             for (int i = 0; i < cVoice; i++)
             {
@@ -154,75 +144,84 @@ namespace Illusion.Card
             }
             reader.ReadBytes(4); // repeat
 
-            if (sex == 0)
-            {
-                // visibleSimple, colorType, simpleColor, visibleSon
-                reader.ReadBytes(78);
-
-                if (version >= VersionOf(0, 1, 2))
-                {
-                    // animeOptionParam[0], animeOptionParam[1]
-                    reader.ReadBytes(8);
-                }
-            }
+            // visibleSon, sonLength, visibleSimple
+            reader.ReadBytes(6);
+            reader.ReadString(); // simpleColor
+            // animeOptionParam[0], animeOptionParam[1]
+            reader.ReadBytes(8);
 
             // neckByteData
             int cNeckByte = reader.ReadInt32();
             reader.ReadBytes(cNeckByte);
 
-            if (version >= VersionOf(0, 1, 4))
+            // eyesByteData
+            int cEyesByte = reader.ReadInt32();
+            reader.ReadBytes(cEyesByte);
+
+            reader.ReadBytes(4); // animeNormalizedTime
+
+            // dicAccessGroup
+            int accessGroup = reader.ReadInt32();
+            if (accessGroup > 0)
             {
-                // eyesByteData
-                int cEyesByte = reader.ReadInt32();
-                reader.ReadBytes(cEyesByte);
+                reader.ReadBytes(8 * accessGroup);
             }
 
-            // animeNormalizedTime
-            reader.ReadBytes(4);
-
-            if (version >= VersionOf(0, 1, 2))
+            // dicAccessNo
+            int accessNo = reader.ReadInt32();
+            if (accessNo > 0)
             {
-                // dicAccessGroup
-                int accessGroup = reader.ReadInt32();
-                if (accessGroup > 0)
-                {
-                    reader.ReadBytes(8 * accessGroup);
-                }
-
-                // dicAccessNo
-                int accessNo = reader.ReadInt32();
-                if (accessNo > 0)
-                {
-                    reader.ReadBytes(8 * accessNo);
-                }
+                reader.ReadBytes(8 * accessNo);
             }
         }
 
         protected virtual void ReadOIItemInfo(BinaryReader reader, Version version)
         {
             ReadObjectInfo(reader, version, true);
-            // no, animeSpeed, colortype, color, color2
-            reader.ReadBytes(156);
-            
-            if (version >= VersionOf(1, 0, 4))
+            // group, category, no
+            reader.ReadBytes(12);
+            if (version >= VersionOf(1, 0, 1))
             {
-                // enableFK
-                reader.ReadByte();
+                reader.ReadBytes(4); // animePattern
+            }
+            reader.ReadBytes(4); // animeSpeed
 
-                // bones
-                int cbone = reader.ReadInt32();
-                for (int i = 0; i < cbone; i++)
-                {
-                    reader.ReadString(); // key
-                    ReadObjectInfo(reader, version, false);
-                }
+            // colors
+            for (int i = 0; i < 4; i++)
+            {
+                // mainColor
+                reader.ReadString();
+                // metallic, glossiness
+                reader.ReadBytes(8);
+
+                // pattern
+                ReadOIPatternInfo(reader, version);
             }
 
-            if (version >= VersionOf(0, 1, 6))
+            reader.ReadBytes(4); // alpha
+            reader.ReadString(); // emissionColor
+            // emissionPower, lightCancel
+            reader.ReadBytes(8);
+
+            // panel
+            ReadOIPatternInfo(reader, version);
+
+            reader.ReadByte(); // enableFK
+
+            // bones
+            int cbone = reader.ReadInt32();
+            for (int i = 0; i < cbone; i++)
             {
-                // animeNormalizedTime
-                reader.ReadBytes(4);
+                reader.ReadString(); // key
+                ReadObjectInfo(reader, version, false);
             }
+            reader.ReadByte(); // enableDynamicBone
+
+            // option
+            int cOption = reader.ReadInt32();
+            reader.ReadBytes(cOption);
+
+            reader.ReadBytes(4); // animeNormalizedTime
             ReadChild(reader, version);
         }
 
@@ -239,6 +238,40 @@ namespace Illusion.Card
             // name
             reader.ReadString();
             ReadChild(reader, version);
+        }
+
+        protected virtual void ReadOIRouteInfo(BinaryReader reader, Version version)
+        {
+            ReadObjectInfo(reader, version, true);
+            reader.ReadString(); // name
+
+            ReadChild(reader, version);
+
+            // OIRoutePointInfo
+            int cPoint = reader.ReadInt32();
+            for (int i = 0; i < cPoint; i++)
+            {
+                ReadObjectInfo(reader, version, false);
+                // speed, easeType, connection
+                reader.ReadBytes(12);
+
+                // aidInfo
+                ReadObjectInfo(reader, version, false);
+                reader.ReadByte(); // isInit
+
+                reader.ReadByte(); // link
+            }
+
+            // active, loop, visibleLine, orient
+            reader.ReadBytes(7);
+            reader.ReadString(); // color
+        }
+
+        protected virtual void ReadOICameraInfo(BinaryReader reader, Version version)
+        {
+            ReadObjectInfo(reader, version, true);
+            reader.ReadString(); // name
+            reader.ReadBoolean(); // active
         }
         #endregion
 
@@ -271,6 +304,12 @@ namespace Illusion.Card
                         break;
                     case 3:
                         ReadOIFolderInfo(reader, Version);
+                        break;
+                    case 4:
+                        ReadOIRouteInfo(reader, Version);
+                        break;
+                    case 5:
+                        ReadOICameraInfo(reader, Version);
                         break;
                     default:
                         break;

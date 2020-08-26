@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Illusion.Card
@@ -82,5 +83,20 @@ namespace Illusion.Card
 
     public interface ICoordinateCard : ICard
     {
+    }
+
+    public interface ISceneCard
+    {
+        #region Members
+        byte[] PngData { get; set; }
+
+        Version Version { get; }
+
+        string SourceFileName { get; }
+
+        List<ICharaCard> CharaCards { get; }
+
+        bool Parse(BinaryReader reader, long pngEnd);
+        #endregion
     }
 }

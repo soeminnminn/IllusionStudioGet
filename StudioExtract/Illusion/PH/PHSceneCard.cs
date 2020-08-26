@@ -4,30 +4,35 @@ using System.IO;
 
 namespace Illusion.Card
 {
-    public class PHSceneCard
+    public class PHSceneCard : ISceneCard
     {
         #region Variable
-        public string Version { get; private set; }
+        public byte[] PngData { get; set; }
+
+        public Version Version { get; private set; }
 
         public string SourceFileName { get; }
 
-        public List<PHCharaCard> CharaCards { get; }
+        public List<ICharaCard> CharaCards { get; }
         #endregion
 
         #region Constructor
         public PHSceneCard(string srcFileName)
         {
             this.SourceFileName = srcFileName;
-            this.CharaCards = new List<PHCharaCard>();
+            this.CharaCards = new List<ICharaCard>();
         }
         #endregion
 
         #region Methods
 
+        private Version VersionOf(int major, int minor, int build, int revision) => new Version(major, minor, build, revision);
+
+        private Version VersionOf(int major, int minor, int build) => new Version(major, minor, build);
+
         #region Read OI Info
-        private void ReadObjectInfo(BinaryReader reader, bool other)
+        protected virtual void ReadObjectInfo(BinaryReader reader, Version version, bool other)
         {
-            // 133
             reader.ReadBytes(4); // dicKey
             reader.ReadString(); // ChangeAmount.pos
             reader.ReadString(); // ChangeAmount.rot
@@ -40,7 +45,7 @@ namespace Illusion.Card
             }
         }
 
-        private void ReadCharFileStatus(BinaryReader reader, int version, ref string name)
+        protected virtual void ReadCharFileStatus(BinaryReader reader, Version version, ref string name)
         {
             reader.ReadBytes(4); // coordinateType
             int countAccessory = reader.ReadInt32();
@@ -63,7 +68,7 @@ namespace Illusion.Card
             // disableShapeNipR, hideEyesHighlight
             reader.ReadBytes(17);
 
-            if (version >= 14)
+            if (version >= VersionOf(0, 1, 4))
             {
                 name = reader.ReadString();
             }
@@ -73,7 +78,7 @@ namespace Illusion.Card
             }
         }
 
-        private void ReadChild(BinaryReader reader, int version)
+        protected virtual void ReadChild(BinaryReader reader, Version version)
         {
             int childCount = reader.ReadInt32();
             for (int i = 0; i < childCount; i++)
@@ -88,7 +93,7 @@ namespace Illusion.Card
                         ReadOIItemInfo(reader, version);
                         break;
                     case 2:
-                        ReadOILightInfo(reader);
+                        ReadOILightInfo(reader, version);
                         break;
                     case 3:
                         ReadOIFolderInfo(reader, version);
@@ -99,9 +104,9 @@ namespace Illusion.Card
             }
         }
 
-        private void ReadOICharInfo(BinaryReader reader, int version)
+        protected virtual void ReadOICharInfo(BinaryReader reader, Version version)
         {
-            ReadObjectInfo(reader, true);
+            ReadObjectInfo(reader, version, true);
 
             var sex = reader.ReadInt32();
 
@@ -114,47 +119,49 @@ namespace Illusion.Card
             charaCard.Name = name;
             this.CharaCards.Add(charaCard);
 
+            // bones
             int countBones = reader.ReadInt32();
             for (int i = 0; i < countBones; i++)
             {
-                reader.ReadBytes(4);
-                ReadObjectInfo(reader, false);
+                reader.ReadBytes(4); // key
+                ReadObjectInfo(reader, version, false);
             }
 
+            // IkTarget
             int countIkTarget = reader.ReadInt32();
             for (int i = 0; i < countIkTarget; i++)
             {
-                reader.ReadBytes(4);
-                ReadObjectInfo(reader, false);
+                reader.ReadBytes(4); // key
+                ReadObjectInfo(reader, version, false);
             }
 
+            // child
             int countChild = reader.ReadInt32();
             for (int i = 0; i < countChild; i++)
             {
-                reader.ReadBytes(4);
+                reader.ReadBytes(4); // key
                 ReadChild(reader, version);
             }
 
             // kinematicMode, animeInfo.group, animeInfo.category, animeInfo.no
-            // handPtnL, handPtnR, skinRate nipple, siru
+            // handPtnL, handPtnR, skinRate, nipple, siru
             reader.ReadBytes(37);
 
-            if (version >= 12)
+            if (version >= VersionOf(0, 1, 2))
             {
-                // faceOption
-                reader.ReadBytes(4); 
+                reader.ReadBytes(4); // faceOption
             }
 
             // mouthOpen, lipSync
             reader.ReadBytes(5);
 
-            ReadObjectInfo(reader, false); // lookAtTarget
+            ReadObjectInfo(reader, version, false); // lookAtTarget
 
             // enableIK, activeIK, enableFK, activeFK
             // expression, animeSpeed
             reader.ReadBytes(22);
 
-            if (version < 12) 
+            if (version < VersionOf(0, 1, 2)) 
             {
                 // animePattern[0]
                 reader.ReadBytes(4);
@@ -207,45 +214,48 @@ namespace Illusion.Card
             }
         }
 
-        private void ReadOIItemInfo(BinaryReader reader, int version)
+        protected virtual void ReadOIItemInfo(BinaryReader reader, Version version)
         {
-            ReadObjectInfo(reader, true);
+            ReadObjectInfo(reader, version, true);
             // no, animeSpeed, colortype, color, color2, enableFK
             reader.ReadBytes(157);  
 
             int cbone = reader.ReadInt32();
             for (int i = 0; i < cbone; i++)
             {
-                reader.ReadString();
-                ReadObjectInfo(reader, false);
+                reader.ReadString(); // key
+                ReadObjectInfo(reader, version, false);
             }
 
             reader.ReadBytes(4); // animeNormalizedTime
             ReadChild(reader, version);
         }
 
-        private void ReadOILightInfo(BinaryReader reader)
+        protected virtual void ReadOILightInfo(BinaryReader reader, Version version)
         {
-            ReadObjectInfo(reader, true);
+            ReadObjectInfo(reader, version, true);
             // no, color, intensity, range, spotAngle, shadow, enable, drawTarget
             reader.ReadBytes(35);
         }
 
-        private void ReadOIFolderInfo(BinaryReader reader, int version)
+        protected virtual void ReadOIFolderInfo(BinaryReader reader, Version version)
         {
-            ReadObjectInfo(reader, true);
-            // name
-            reader.ReadString();
+            ReadObjectInfo(reader, version, true);
+            reader.ReadString(); // name
             ReadChild(reader, version);
         }
         #endregion
 
-        public bool Parse(BinaryReader reader, long pngEnd)
+        public virtual bool Parse(BinaryReader reader, long pngEnd)
         {
+            if (pngEnd > 0)
+            {
+                reader.Seek(0, SeekOrigin.Begin);
+                PngData = reader.ReadBytes((int)pngEnd);
+            }
             reader.Seek(pngEnd, SeekOrigin.Begin);
 
-            Version = reader.ReadString();
-            int versionInt = int.Parse(Version.Replace(".", ""));
+            Version = new Version(reader.ReadString());
 
             int infoCount = reader.ReadInt32();
             for (int i = 0; i < infoCount; i++)
@@ -255,23 +265,23 @@ namespace Illusion.Card
                 switch(infoType)
                 {
                     case 0:
-                        ReadOICharInfo(reader, versionInt);
+                        ReadOICharInfo(reader, Version);
                         break;
                     case 1:
-                        ReadOIItemInfo(reader, versionInt);
+                        ReadOIItemInfo(reader, Version);
                         break;
                     case 2:
-                        ReadOILightInfo(reader);
+                        ReadOILightInfo(reader, Version);
                         break;
                     case 3:
-                        ReadOIFolderInfo(reader, versionInt);
+                        ReadOIFolderInfo(reader, Version);
                         break;
                     default:
                         break;
                 }
             }
 
-            return false;
+            return CharaCards.Count > 0;
         }
         #endregion
     }
