@@ -14,7 +14,15 @@ namespace Illusion.Card
         #endregion
 
         #region Properties
-        public string Game { get => "AIS / HS2"; }
+        public string Game 
+        { 
+            get 
+            {
+                if (DataBlocks.ContainsKey("Parameter2") && DataBlocks.ContainsKey("GameInfo2"))
+                    return "HS2";
+                return "AIS"; 
+            } 
+        }
 
         public int DataVersion { get; }
 
@@ -86,7 +94,8 @@ namespace Illusion.Card
 
         public string GenerateFileName()
         {
-            string fileName = Sex == 0 ? "HS2ChaM_" : "HS2ChaF_";
+            string fileName = Game;
+            fileName += Sex == 0 ? "ChaM_" : "ChaF_";
             fileName += DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".png";
 
             return fileName;

@@ -46,7 +46,7 @@ namespace Illusion.Card
         #region Methods
 
         #region Color Reader
-        internal static byte[] ReadColorHair(BinaryReader reader, int version)
+        private byte[] ReadColorHair(BinaryReader reader, int version)
         {
             BinaryList color = new BinaryList();
             color.Add(1); // colorType
@@ -70,7 +70,7 @@ namespace Illusion.Card
             return color.ToArray();
         }
 
-        internal static byte[] ReadColorPBR1(BinaryReader reader, int version)
+        private byte[] ReadColorPBR1(BinaryReader reader, int version)
         {
             BinaryList color = new BinaryList();
             color.Add(2); // colorType
@@ -102,7 +102,7 @@ namespace Illusion.Card
             return color.ToArray();
         }
 
-        internal static byte[] ReadColorPBR2(BinaryReader reader, int version)
+        private byte[] ReadColorPBR2(BinaryReader reader, int version)
         {
             BinaryList color = new BinaryList();
             color.Add(3); // colorType
@@ -153,7 +153,7 @@ namespace Illusion.Card
             return color.ToArray();
         }
 
-        internal static byte[] ReadColorAlloy(BinaryReader reader, int version)
+        private byte[] ReadColorAlloy(BinaryReader reader, int version)
         {
             BinaryList color = new BinaryList();
             color.Add(4); // colorType
@@ -184,7 +184,7 @@ namespace Illusion.Card
             return color.ToArray();
         }
 
-        internal static byte[] ReadColorAlloyHSVOffset(BinaryReader reader, int version)
+        private byte[] ReadColorAlloyHSVOffset(BinaryReader reader, int version)
         {
             BinaryList color = new BinaryList();
             color.Add(5); // colorType
@@ -241,7 +241,7 @@ namespace Illusion.Card
             return color.ToArray();
         }
 
-        internal static byte[] ReadColorEyeHighlight(BinaryReader reader, int version)
+        private byte[] ReadColorEyeHighlight(BinaryReader reader, int version)
         {
             BinaryList color = new BinaryList();
             color.Add(7); // colorType

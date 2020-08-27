@@ -102,6 +102,7 @@
     <Compile Include="Illusion\AIS\AISCharaCard.cs" />
     <Compile Include="Illusion\AIS\NeoV2SceneCard.cs" />
     <Compile Include="Illusion\BinaryList.cs" />
+    <Compile Include="Illusion\BoyerMoore.cs" />
     <Compile Include="Illusion\Card.cs" />
     <Compile Include="Illusion\CardExtractor.cs" />
     <Compile Include="Illusion\CharDefine.cs" />
