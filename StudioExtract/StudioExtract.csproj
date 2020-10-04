@@ -101,6 +101,7 @@
     </Compile>
     <Compile Include="Illusion\AIS\AISCharaCard.cs" />
     <Compile Include="Illusion\AIS\NeoV2SceneCard.cs" />
+    <Compile Include="Illusion\AlgorithmForce.cs" />
     <Compile Include="Illusion\BinaryList.cs" />
     <Compile Include="Illusion\BoyerMoore.cs" />
     <Compile Include="Illusion\Card.cs" />

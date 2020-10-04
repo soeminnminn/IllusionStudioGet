@@ -106,6 +106,21 @@ namespace Illusion
             return -1;
         }
 
+        public static long IndexOf(this byte[] haystack, byte[] needle, long startOffset = 0)
+        {
+            unsafe
+            {
+                fixed (byte* h = haystack) fixed (byte* n = needle)
+                {
+                    for (byte* hNext = h + startOffset, hEnd = h + haystack.LongLength + 1 - needle.LongLength, nEnd = n + needle.LongLength; hNext < hEnd; hNext++)
+                        for (byte* hInc = hNext, nInc = n; *nInc == *hInc; hInc++)
+                            if (++nInc == nEnd)
+                                return hNext - h;
+                    return -1;
+                }
+            }
+        }
+
         public static long Seek(this BinaryReader reader, long offset, SeekOrigin origin) => reader.BaseStream.Seek(offset, origin);
 
         public static long Position(this BinaryReader reader) => reader.BaseStream.Position;
